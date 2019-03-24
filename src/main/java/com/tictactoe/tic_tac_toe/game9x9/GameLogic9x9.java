@@ -1,37 +1,26 @@
-package com.tictactoe.tic_tac_toe;
+package com.tictactoe.tic_tac_toe.game9x9;
 
+import com.tictactoe.tic_tac_toe.Cell;
+import com.tictactoe.tic_tac_toe.ElementHelper;
+import com.tictactoe.tic_tac_toe.WhoWins;
 import javafx.scene.control.Button;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Path;
 
 public class GameLogic9x9 {
 
     private boolean isEnded = false;
     private WhoWins whoWins = WhoWins.NOBODY;
 
-    public Cell[][] addElementsToLogicTable(Button[][] buttonTable, Cell[][] logicTable) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (buttonTable[i][j].getGraphic() instanceof Path) {
-                    logicTable[i][j] = Cell.CROSS;
-                } else if (buttonTable[i][j].getGraphic() instanceof Circle) {
-                    logicTable[i][j] = Cell.CIRCLE;
-                }
-            }
-        }
-        return logicTable;
-    }
-
-    public boolean isEndAndWhoWins(Cell[][] logicTable) {
+    public boolean isEndAndWhoWins(Cell[][] logicTable, Button[][] buttonTable) {
         for(int i = 0; i < 5; i++) {
             for(int j = 0; j < 9; j++) {
                 if(!(logicTable[i][j].equals(Cell.EMPTY)) && logicTable[i][j].equals(logicTable[i + 1][j]) && logicTable[i][j].equals(logicTable[i + 2][j]) && logicTable[i][j].equals(logicTable[i + 3][j]) && logicTable[i][j].equals(logicTable[i + 4][j])) {
-                    isEnded = true;
-                    if(logicTable[i][j] == Cell.CIRCLE) {
-                        whoWins = WhoWins.CIRCLES;
-                    } else {
-                        whoWins = WhoWins.CROSSES;
-                    }
+                    whoWinGame(logicTable[i][j]);
+                    ElementHelper.coloringButton(buttonTable[i][j]);
+                    ElementHelper.coloringButton(buttonTable[i + 1][j]);
+                    ElementHelper.coloringButton(buttonTable[i + 2][j]);
+                    ElementHelper.coloringButton(buttonTable[i + 3][j]);
+                    ElementHelper.coloringButton(buttonTable[i + 4][j]);
+
                     return true;
                 }
             }
@@ -40,12 +29,13 @@ public class GameLogic9x9 {
         for(int i = 0; i < 9; i++) {
             for(int j = 0; j < 5; j++) {
                 if(!(logicTable[i][j].equals(Cell.EMPTY)) && logicTable[i][j].equals(logicTable[i][j + 1]) && logicTable[i][j].equals(logicTable[i][j + 2]) && logicTable[i][j].equals(logicTable[i][j + 3]) && logicTable[i][j].equals(logicTable[i][j + 4])) {
-                    isEnded = true;
-                    if(logicTable[i][j] == Cell.CIRCLE) {
-                        whoWins = WhoWins.CIRCLES;
-                    } else {
-                        whoWins = WhoWins.CROSSES;
-                    }
+                    whoWinGame(logicTable[i][j]);
+                    ElementHelper.coloringButton(buttonTable[i][j]);
+                    ElementHelper.coloringButton(buttonTable[i][j + 1]);
+                    ElementHelper.coloringButton(buttonTable[i][j + 2]);
+                    ElementHelper.coloringButton(buttonTable[i][j + 3]);
+                    ElementHelper.coloringButton(buttonTable[i][j + 4]);
+
                     return true;
                 }
             }
@@ -54,12 +44,13 @@ public class GameLogic9x9 {
         for(int i = 0; i < 5; i++) {
             for(int j = 0; j < 5; j++) {
                 if(!(logicTable[i][j].equals(Cell.EMPTY)) && logicTable[i][j].equals(logicTable[i + 1][j + 1]) && logicTable[i][j].equals(logicTable[i + 2][j + 2]) && logicTable[i][j].equals(logicTable[i + 3][j + 3]) && logicTable[i][j].equals(logicTable[i + 4][j + 4])) {
-                    isEnded = true;
-                    if(logicTable[i][j] == Cell.CIRCLE) {
-                        whoWins = WhoWins.CIRCLES;
-                    } else {
-                        whoWins = WhoWins.CROSSES;
-                    }
+                    whoWinGame(logicTable[i][j]);
+                    ElementHelper.coloringButton(buttonTable[i][j]);
+                    ElementHelper.coloringButton(buttonTable[i + 1][j + 1]);
+                    ElementHelper.coloringButton(buttonTable[i + 2][j + 2]);
+                    ElementHelper.coloringButton(buttonTable[i + 3][j + 3]);
+                    ElementHelper.coloringButton(buttonTable[i + 4][j + 4]);
+
                     return true;
                 }
             }
@@ -68,12 +59,13 @@ public class GameLogic9x9 {
         for(int i = 0; i < 5; i++) {
             for(int j = 4; j < 9; j++) {
                 if(!(logicTable[i][j].equals(Cell.EMPTY)) && logicTable[i][j].equals(logicTable[i + 1][j -1]) && logicTable[i][j].equals(logicTable[i + 2][j - 2]) && logicTable[i][j].equals(logicTable[i + 3][j - 3]) && logicTable[i][j].equals(logicTable[i + 4][j - 4])) {
-                    isEnded = true;
-                    if(logicTable[i][j] == Cell.CIRCLE) {
-                        whoWins = WhoWins.CIRCLES;
-                    } else {
-                        whoWins = WhoWins.CROSSES;
-                    }
+                    whoWinGame(logicTable[i][j]);
+                    ElementHelper.coloringButton(buttonTable[i][j]);
+                    ElementHelper.coloringButton(buttonTable[i + 1][j - 1]);
+                    ElementHelper.coloringButton(buttonTable[i + 2][j - 2]);
+                    ElementHelper.coloringButton(buttonTable[i + 3][j - 3]);
+                    ElementHelper.coloringButton(buttonTable[i + 4][j - 4]);
+
                     return true;
                 }
             }
@@ -95,6 +87,15 @@ public class GameLogic9x9 {
             }
         }
         return true;
+    }
+
+    public void whoWinGame(Enum<Cell> inCell) {
+        isEnded = true;
+        if(inCell == Cell.CIRCLE) {
+            whoWins = WhoWins.CIRCLES;
+        } else {
+            whoWins = WhoWins.CROSSES;
+        }
     }
 
     public boolean isEnded() {

@@ -1,10 +1,8 @@
 package com.tictactoe.tic_tac_toe;
 
-import javafx.event.Event;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Path;
 
 import java.util.Random;
 
@@ -14,78 +12,25 @@ public class GameController {
     private static int counterWinCircle = 0;
     private static int counterWinCross = 0;
     private static int counterDraw = 0;
-    private GUIHelper guiHelper;
-    private ElementHelper elementHelper = new ElementHelper(this);
-    private Button[][] buttonTable = elementHelper.createButtonTable();
-    private GameLogic gameLogic = new GameLogic();
     private Random generator = new Random();
-    private boolean circleOrCross;
 
-    private Cell[][] logicTable = createLogicTable();
-
-    public GameController(GUIHelper guiHelper) {
-        this.guiHelper = guiHelper;
-    }
-
-    private Cell[][] createLogicTable() {
-        Cell[][] createdLogicTable = new Cell[9][9];
-        for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
+    public Cell[][] createLogicTable(int size) {
+        Cell[][] createdLogicTable = new Cell[size][size];
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++) {
                 createdLogicTable[i][j] = Cell.EMPTY;
             }
         }
         return createdLogicTable;
     }
 
-    public void onMouseClickAction(Button button) {
-        if(!gameLogic.isEnded()) {
-            userAction(button);
-        }
-        if(!gameLogic.isEnded()) {
-            computerAction();
-        }
-    }
-
-    public void computerFirst() {
-        computerAction();
-    }
-
-    private void userAction(Button button) {
-        circleOrCross = guiHelper.isCrossOrCircle();
-        if(!circleOrCross) {
-            elementHelper.addCircle(button);
-        } else {
-            elementHelper.addCross(button);
-        }
-        logicTable = gameLogic.addElementsToLogicTable(buttonTable, logicTable);
-        if(gameLogic.isEndAndWhoWins(logicTable)) {
-            endGame();
-        }
-        button.setOnAction(Event::consume);
-    }
-
-    private void computerAction() {
-        circleOrCross = guiHelper.isCrossOrCircle();
-        Button button = computerChoice();
-        if(circleOrCross) {
-            elementHelper.addCircle(button);
-        } else {
-            elementHelper.addCross(button);
-        }
-        logicTable = gameLogic.addElementsToLogicTable(buttonTable, logicTable);
-        if(gameLogic.isEndAndWhoWins(logicTable)) {
-            endGame();
-        }
-        button.setOnAction(Event::consume);
-    }
-
-    private Button computerChoice() {
+    public Button computerChoice(Cell[][] logicTable, Button[][] buttonTable, int size) {
         Button button = null;
         int random1;
         int random2;
         do {
-            random1 = generator.nextInt(3);
-            random2 = generator.nextInt(3);
+            random1 = generator.nextInt(size);
+            random2 = generator.nextInt(size);
             if(logicTable[random1][random2] == Cell.EMPTY) {
                 button = buttonTable[random1][random2];
             }
@@ -94,39 +39,29 @@ public class GameController {
         return button;
     }
 
-    public void newGame() {
-        gameLogic.setEnded(false);
-        gameLogic.setWhoWins(WhoWins.NOBODY);
-        buttonTable = elementHelper.getButtonTable();
-        for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
-                logicTable[i][j] = Cell.EMPTY;
+    public Cell[][] addElementsToLogicTable(Button[][] buttonTable, Cell[][] logicTable, int size) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (buttonTable[i][j].getGraphic() instanceof Path) {
+                    logicTable[i][j] = Cell.CROSS;
+                } else if (buttonTable[i][j].getGraphic() instanceof Circle) {
+                    logicTable[i][j] = Cell.CIRCLE;
+                }
             }
         }
+        return logicTable;
     }
 
-    public void counter() {
-        if(gameLogic.getWhoWins() == WhoWins.CIRCLES) {
-            counterWinCircle++;
-        } else if(gameLogic.getWhoWins() == WhoWins.CROSSES) {
-            counterWinCross++;
-        } else {
-            counterDraw++;
-        }
+    public static void addWinCircle() {
+        counterWinCircle++;
     }
 
-    public void endGame() {
-        Button btn = guiHelper.getSummary();
-        btn.setVisible(true);
-        counter();
+    public static void addWinCross() {
+        counterWinCross++;
     }
 
-    public ElementHelper getElementHelper() {
-        return elementHelper;
-    }
-
-    public GameLogic getGameLogic() {
-        return gameLogic;
+    public static void addDraw() {
+        counterDraw++;
     }
 
     public static int getCounterWinCircle() {
@@ -140,4 +75,5 @@ public class GameController {
     public static int getCounterDraw() {
         return counterDraw;
     }
+
 }
