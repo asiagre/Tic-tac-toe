@@ -1,15 +1,10 @@
-package com.tictactoe.tic_tac_toe.game3x3;
+package com.tictactoe.tic_tac_toe;
 
-import com.tictactoe.tic_tac_toe.Cell;
-import com.tictactoe.tic_tac_toe.ElementHelper;
-import com.tictactoe.tic_tac_toe.WhoWins;
 import javafx.scene.control.Button;
 
-public class GameLogic3x3 {
+public class GameLogic3x3 extends GameLogic {
 
-    private boolean isEnded = false;
-    private WhoWins whoWins = WhoWins.NOBODY;
-
+    private int size = 3;
 
     public boolean isEndAndWhoWins(Cell[][] logicTable, Button[][] buttonTable) {
         for(int i = 0; i < 3; i++) {
@@ -48,49 +43,14 @@ public class GameLogic3x3 {
             ElementHelper.coloringButton(buttonTable[2][0]);
 
             return true;
-        } else if(isBoardFull(logicTable)) {
-            isEnded = true;
-            whoWins = WhoWins.DRAW;
+        }
+
+        if(isBoardFull(logicTable, size)) {
+            nobodyWins();
             return true;
-        }
-
-        return false;
-    }
-
-    public boolean isBoardFull(Cell[][] logicTable) {
-        for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
-                if(logicTable[i][j].equals(Cell.EMPTY)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public void whoWinGame(Enum<Cell> inCell) {
-        isEnded = true;
-        if(inCell == Cell.CIRCLE) {
-            whoWins = WhoWins.CIRCLES;
         } else {
-            whoWins = WhoWins.CROSSES;
+            return false;
         }
-    }
-
-    public boolean isEnded() {
-        return isEnded;
-    }
-
-    public WhoWins getWhoWins() {
-        return whoWins;
-    }
-
-    public void setWhoWins(WhoWins whoWins) {
-        this.whoWins = whoWins;
-    }
-
-    public void setEnded(boolean ended) {
-        isEnded = ended;
     }
 
 }

@@ -1,15 +1,10 @@
-package com.tictactoe.tic_tac_toe.game6x6;
+package com.tictactoe.tic_tac_toe;
 
-
-import com.tictactoe.tic_tac_toe.Cell;
-import com.tictactoe.tic_tac_toe.ElementHelper;
-import com.tictactoe.tic_tac_toe.WhoWins;
 import javafx.scene.control.Button;
 
-public class GameLogic6x6 {
+public class GameLogic6x6 extends GameLogic {
 
-    private boolean isEnded = false;
-    private WhoWins whoWins = WhoWins.NOBODY;
+    private int size = 6;
 
     public boolean isEndAndWhoWins(Cell[][] logicTable, Button[][] buttonTable) {
         for(int i = 0; i < 3; i++) {
@@ -68,47 +63,11 @@ public class GameLogic6x6 {
             }
         }
 
-        if(boardFull(logicTable)) {
+        if(isBoardFull(logicTable, size)) {
+            nobodyWins();
             return true;
         } else {
             return false;
         }
     }
-
-    public boolean boardFull(Cell[][] logicTable) {
-        for(int i = 0; i < 6; i++) {
-            for(int j = 0; j < 6; j++) {
-                if(logicTable[i][j].equals(Cell.EMPTY)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public void whoWinGame(Enum<Cell> inCell) {
-        isEnded = true;
-        if(inCell == Cell.CIRCLE) {
-            whoWins = WhoWins.CIRCLES;
-        } else {
-            whoWins = WhoWins.CROSSES;
-        }
-    }
-
-    public boolean isEnded() {
-        return isEnded;
-    }
-
-    public WhoWins getWhoWins() {
-        return whoWins;
-    }
-
-    public void setWhoWins(WhoWins whoWins) {
-        this.whoWins = whoWins;
-    }
-
-    public void setEnded(boolean ended) {
-        isEnded = ended;
-    }
-
 }

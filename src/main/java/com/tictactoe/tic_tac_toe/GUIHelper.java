@@ -1,11 +1,5 @@
 package com.tictactoe.tic_tac_toe;
 
-import com.tictactoe.tic_tac_toe.game3x3.Board3x3;
-import com.tictactoe.tic_tac_toe.game3x3.GameController3x3;
-import com.tictactoe.tic_tac_toe.game6x6.Board6x6;
-import com.tictactoe.tic_tac_toe.game6x6.GameController6x6;
-import com.tictactoe.tic_tac_toe.game9x9.Board9x9;
-import com.tictactoe.tic_tac_toe.game9x9.GameController9x9;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -22,13 +16,8 @@ import javafx.scene.text.Text;
 public class GUIHelper {
 
     private StackPane stackPane;
-    private GameController gameController = new GameController();
-    private GameController3x3 gameController3x3 = new GameController3x3(this, gameController);
-    private GameController6x6 gameController6x6 = new GameController6x6(this, gameController);
-    private GameController9x9 gameController9x9 = new GameController9x9(this, gameController);
-    private Board3x3 board3x3 = gameController3x3.getBoard3x3();
-    private Board6x6 board6x6 = gameController6x6.getBoard6x6();
-    private Board9x9 board9x9 = gameController9x9.getBoard9x9();
+    private GameController gameController;
+    private Board board;
     private Button summary;
     private boolean crossOrCircle = false;
 
@@ -42,26 +31,32 @@ public class GUIHelper {
         Label label = ElementHelper.createLabel("This is the tic-tac-toe game. In this game you have to put circles or crosses in one of the compartments of the grid to get a row of three(3x3), four(6x6) or five(9x9) circles/crosses before the opponent does.");
         Button board3x3Button = new Button("3 x 3");
         board3x3Button.setOnAction(event -> {
+            gameController = new GameController(this, ChangeBoard.THREE);
+            board = gameController.getBoard();
             vBox.getChildren().clear();
-            generateBoard3x3VBox();
+            generateBoardVBox();
             if(crossOrCircle) {
-                gameController3x3.computerFirst();
+                gameController.computerFirst();
             }
         });
         Button board6x6Button = new Button("6 x 6");
         board6x6Button.setOnAction(event -> {
+            gameController = new GameController(this, ChangeBoard.SIX);
+            board = gameController.getBoard();
             vBox.getChildren().clear();
-            generateBoard6x6VBox();
+            generateBoardVBox();
             if(crossOrCircle) {
-                gameController6x6.computerFirst();
+                gameController.computerFirst();
             }
         });
         Button board9x9Button = new Button("9 x 9");
         board9x9Button.setOnAction(event -> {
+            gameController = new GameController(this, ChangeBoard.NINE);
+            board = gameController.getBoard();
             vBox.getChildren().clear();
-            generateBoard9x9VBox();
+            generateBoardVBox();
             if(crossOrCircle) {
-                gameController9x9.computerFirst();
+                gameController.computerFirst();
             }
         });
         Label labelChoiceBox = ElementHelper.createLabel("Choice: circle or cross");
@@ -81,30 +76,12 @@ public class GUIHelper {
         return stackPane;
     }
 
-    private void generateBoard3x3VBox() {
+    private void generateBoardVBox() {
         VBox vBox = generateDefaultVBox();
         summary = ElementHelper.createSummaryButton();
-        summary.setOnAction(e -> generateResultVBox(gameController3x3.getGameLogic3x3().getWhoWins()));
+        summary.setOnAction(event -> generateResultVBox(gameController.getGameLogic().getWhoWins()));
         vBox.setSpacing(10.0);
-        vBox.getChildren().addAll(board3x3.createBoard(), summary);
-        stackPane.getChildren().add(vBox);
-    }
-
-    private void generateBoard6x6VBox() {
-        VBox vBox = generateDefaultVBox();
-        summary = ElementHelper.createSummaryButton();
-        summary.setOnAction(e -> generateResultVBox(gameController6x6.getGameLogic6x6().getWhoWins()));
-        vBox.setSpacing(10.0);
-        vBox.getChildren().addAll(board6x6.createBoard(), summary);
-        stackPane.getChildren().add(vBox);
-    }
-
-    private void generateBoard9x9VBox() {
-        VBox vBox = generateDefaultVBox();
-        summary = ElementHelper.createSummaryButton();
-        summary.setOnAction(e -> generateResultVBox(gameController9x9.getGameLogic9x9().getWhoWins()));
-        vBox.setSpacing(10.0);
-        vBox.getChildren().addAll(board9x9.createBoard(), summary);
+        vBox.getChildren().addAll(board.createBoard(), summary);
         stackPane.getChildren().add(vBox);
     }
 
@@ -128,9 +105,7 @@ public class GUIHelper {
         Button newGame = new Button("New game".toUpperCase());
         newGame.setOnAction(event -> {
             vBox.getChildren().clear();
-            gameController3x3.newGame();
-            gameController6x6.newGame();
-            gameController9x9.newGame();
+            gameController.newGame();
             generateMenuVBox();
         });
         Button endGame = new Button("End game".toUpperCase());
